@@ -1,0 +1,52 @@
+language = "English"
+
+[main_menu]
+start_opt = '1. Start Game'
+leader_opt = '2. Leaderboard'
+conf_opt = '3. Configs'
+leave_opt = '4. Quit'
+
+input_ask = "\nChoose an option: "
+
+goodbye = 'Goodbye     :('
+
+[configs_menu]
+greet = "Configs"
+
+difficulty_opt = "1. Change difficulty"
+grid_opt = "2. Change game grid size"
+lang_opt = "3. Change language"
+leader_opt = "4. Clear leaderboard"
+leave_opt = "5. Go back"
+
+goback_opt = "Go back"
+input_ask = "\nChoose an option: "
+
+greet_difficulty = "Difficulties"
+greet_grid = "Grids"
+greet_language = "Languages"
+
+leader_conf = "This will delete ALL leaderboard, are you sure?"
+leader_yes = "1. Yes"
+leader_no = "2. No"
+leader_msg = "All leaderboard deleted!"
+
+wait_msg = "Press Enter to continue"
+
+[difficulty]
+ign = "IGN"
+easy = "Easy"
+normal = "Normal"
+hard = "Hard"
+hell = "HELL"
+
+[grid]
+tiny = "TINY"
+small = "Small"
+medium = "Medium"
+big = "Big"
+huge = "HUGE"
+
+[languages]
+en = "English"
+br = "Brazilian Portuguese"

@@ -1,0 +1,46 @@
+language = "en"
+
+[main_menu]
+start_opt = '1. Iniciar Jogo'
+leader_opt = '2. Placar'
+conf_opt = '3. Configurações'
+leave_opt = '4. Sair'
+
+input_ask = "\nEscolha uma opção: "
+
+goodbye = 'Adeus     :('
+
+[configs_menu]
+greet = "Configurações"
+
+difficulty_opt = "1. Alterar dificuldade"
+grid_opt = "2. Alterar tamanho do grid"
+lang_opt = "3. Alterar idioma"
+leader_opt = "4. Limpar placar"
+leave_opt = "5. Sair"
+
+goback_opt = "Voltar"
+
+greet_difficulty = "Dificuldades"
+greet_grid = "Tamanhos de Grid"
+greet_language = "Idiomas"
+
+input_ask = "\nEscolha uma opção: "
+
+[difficulty]
+ign = "IGN"
+easy = "Fácil"
+normal = "Normal"
+hard = "Difícil"
+hell = "INFERNO"
+
+[grid]
+tiny = "MINÚSCULO"
+small = "Pequeno"
+medium = "Médio"
+big = "Grande"
+huge = "ENORME"
+
+[languages]
+en = "Inglês"
+br = "Português Brasileiro"
