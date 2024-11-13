@@ -6,11 +6,11 @@ class Settings:
         self.__language, self.__difficulty, self.__grid_size = self.__load_user_settings()
 
         self.__DIFFICULTIES = {
-            "ign" : 0.2,
-            "easy" : 0.5,
+            "ign" : 3,
+            "easy" : 2,
             "normal" : 1,
-            "hard" : 2,
-            "hell" : 3,
+            "hard" : 0.5,
+            "hell" : 0.2,
         }
         self.__GRID_SIZES = {
             "tiny" : 8,

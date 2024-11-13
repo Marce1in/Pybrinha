@@ -2,6 +2,7 @@ from threading import Thread
 from queue import Queue
 from art import tprint
 
+from gameLoop import GameLoop
 from input import listen_input
 from state import game_state
 from render import render_game
@@ -11,13 +12,9 @@ from settings import settings
 
 def main():
     text = settings.get_game_text("main_menu")
-    lang = settings.get_game_text("language")
 
     while True:
         clear_screen()
-
-        if settings.get_game_language() != lang:
-            text = settings.get_game_text("main_menu")
 
         tprint("Pybrinha")
 
@@ -71,13 +68,13 @@ def config():
 
 def run_game():
     input_q = Queue(1)
-    state_q = Queue(1)
+    render_q = Queue(1)
 
-    state_q.put(settings.get_game_grid())
+    render_q.put(settings.get_game_grid())
 
     t1 = Thread(target=listen_input, args=[input_q])
-    t2 = Thread(target=render_game, args=[state_q])
-    t3 = Thread(target=game_state, args=[state_q, input_q])
+    t2 = Thread(target=render_game, args=[render_q])
+    t3 = Thread(target=GameLoop, args=[render_q, input_q])
 
     t1.start()
     t2.start()

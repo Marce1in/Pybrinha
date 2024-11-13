@@ -4,10 +4,10 @@ def listen_input(input):
     while(True):
         key = getkey()
         if key == keys.UP:
-            input.put(0)
+            input.put("u")
         elif key == keys.DOWN:
-            input.put(1)
+            input.put("d")
         elif key == keys.LEFT:
-            input.put(2)
+            input.put("l")
         elif key == keys.RIGHT:
-            input.put(3)
+            input.put("r")

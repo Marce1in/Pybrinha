@@ -78,14 +78,9 @@ def change_grid_size():
 def change_language():
     text_languages = settings.get_game_text("languages")
     text_configs = settings.get_game_text("configs_menu")
-    lang = settings.get_game_text("language")
 
     while True:
         clear_screen()
-
-        if settings.get_game_language() != lang:
-            text_languages = settings.get_game_text("languages")
-            text_configs = settings.get_game_text("configs_menu")
 
         tprint(text_configs["greet_language"])
 
