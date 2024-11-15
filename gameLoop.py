@@ -26,9 +26,9 @@ class GameLoop:
 
         self.__snake_size = 2
 
-        self.start()
+        self.__start()
 
-    def start(self):
+    def __start(self):
         self.__update_snake_head("v")
         self.__render_queue.put(self.__current_grid)
 
@@ -44,20 +44,27 @@ class GameLoop:
             if self.__snake_size <= self.__snake_coordinates_queue.qsize():
                 self.__update_snake_tail()
 
-            match current_input:
-                case "u":
-                    self.__update_snake_position("y", -1, "ʌ")
-                case "d":
-                    self.__update_snake_position("y", 1, "v")
-                case "l":
-                    self.__update_snake_position("x", -1, "<")
-                case "r":
-                    self.__update_snake_position("x", 1, ">")
+            try:
+                match current_input:
+                    case "u":
+                        self.__update_snake_position("y", -1, "ʌ")
+                    case "d":
+                        self.__update_snake_position("y", 1, "v")
+                    case "l":
+                        self.__update_snake_position("x", -1, "<")
+                    case "r":
+                        self.__update_snake_position("x", 1, ">")
+            except:
+                break
+
 
 
     def __update_snake_position(self, axis: Literal["x", "y"], move_step: int, head_character: str):
         self.__update_snake_head("o")
         self.__append_snake_coordinates_to_queue()
+
+        if self.__tile_is_out_of_bounds(axis, move_step):
+            raise Exception("Snake out of array bounds")
 
         self.__snake_head_coordinates[axis] += move_step
 
@@ -68,8 +75,24 @@ class GameLoop:
             self.__snake_size += 1
             self.__generate_fruit()
 
+        if self.__tile_is_snake(head_x, head_y):
+            raise Exception("Snake eaten his own tail")
+
         self.__update_snake_head(head_character)
         self.__render_queue.put(self.__current_grid)
+
+    def __tile_is_out_of_bounds(self, axis: Literal["x", "y"], move_step: int) -> bool:
+        if axis == "x":
+            max_size = self.__grid_size_x
+        else:
+            max_size = self.__grid_size_y
+
+        if self.__snake_head_coordinates[axis] + move_step > max_size:
+            return True
+        elif self.__snake_head_coordinates[axis] <= 0:
+            return True
+        else:
+            return False
 
     def __append_snake_coordinates_to_queue(self):
         self.__snake_coordinates_queue.put(self.__snake_head_coordinates.copy())
@@ -99,6 +122,12 @@ class GameLoop:
             return False
         else:
             return True
+
+    def __tile_is_snake(self, tile_x, tile_y) -> bool:
+        if self.__current_grid[tile_y][tile_x] == "o":
+            return True
+        else:
+            return False
 
     def __tile_have_fruit(self, tile_x, tile_y) -> bool:
         if self.__current_grid[tile_y][tile_x] == "@":
