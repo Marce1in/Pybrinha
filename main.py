@@ -4,7 +4,6 @@ from art import tprint
 
 from gameLoop import GameLoop
 from input import listen_input
-from state import game_state
 from render import render_game
 from helpers import clear_screen
 from configs import select_config

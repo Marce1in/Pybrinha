@@ -1,13 +1,20 @@
 import os
+from queue import ShutDown
 from helpers import clean_clear_screen
 
 def render_game(state):
     os.system("clear")
 
-    while(True):
+    while True:
         if not state.empty():
             clean_clear_screen()
-            render_frame(state.get())
+
+            try:
+                frame = state.get()
+            except ShutDown:
+                break
+
+            render_frame(frame)
 
 def render_frame(state):
     sizeY = len(state)
