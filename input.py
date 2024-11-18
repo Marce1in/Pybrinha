@@ -1,7 +1,7 @@
-from queue import Queue, ShutDown
+from queue import Queue
 from getkey import getkey, keys
 
-def listen_input(input_queue: Queue):
+def listen_input(input_queue: Queue, shutdown_queue: Queue):
     key_maps = {
         keys.UP:    "u",
         keys.DOWN:  "d",
@@ -13,7 +13,7 @@ def listen_input(input_queue: Queue):
         keys.LATIN_SMALL_LETTER_D: "r",
         keys.LATIN_SMALL_LETTER_A: "l",
 
-        keys.ESC: -1
+        keys.LATIN_SMALL_LETTER_Q: -1
     }
 
     forbidden_keys_sequence = {
@@ -30,7 +30,7 @@ def listen_input(input_queue: Queue):
 
     previous_key = None
 
-    while True:
+    while shutdown_queue.empty():
         key = getkey()
 
         if key == previous_key:
@@ -38,8 +38,5 @@ def listen_input(input_queue: Queue):
         elif forbidden_keys_sequence.get(previous_key, None) == key:
             continue
         elif key in key_maps:
-            try:
-                input_queue.put(key_maps[key])
-                previous_key = key
-            except ShutDown:
-                break
+            input_queue.put(key_maps[key])
+            previous_key = key

@@ -11,9 +11,13 @@ from settings import settings
 
 def main():
     text = settings.get_game_text("main_menu")
+    lang = settings.get_game_text("language")
 
     while True:
         clear_screen()
+
+        if settings.get_game_language() != lang:
+            text = settings.get_game_text("main_menu")
 
         tprint("Pybrinha")
 
@@ -33,7 +37,7 @@ def main():
                 config()
             case "4":
                 tprint(text["goodbye"])
-                break
+                exit()
 
 
 def leaderboard():
@@ -62,25 +66,51 @@ def config():
         if select_config(user_input):
             break
 
-
-
-
 def run_game():
     input_q = Queue(1)
     render_q = Queue(1)
+    shutdown_q = Queue(1)
 
-    render_q.put(settings.get_game_grid())
+    keyboard_thread = Thread(target=listen_input, args=[input_q, shutdown_q])
+    render_thread = Thread(target=render_game, args=[render_q, shutdown_q])
+    game_thread = Thread(target=GameLoop, args=[render_q, input_q, shutdown_q])
 
-    t1 = Thread(target=listen_input, args=[input_q])
-    t2 = Thread(target=render_game, args=[render_q])
-    t3 = Thread(target=GameLoop, args=[render_q, input_q])
+    keyboard_thread.start()
+    render_thread.start()
+    game_thread.start()
 
-    t1.start()
-    t2.start()
-    t3.start()
+    keyboard_thread.join()
+    render_thread.join()
+    game_thread.join()
 
-    t1.join()
-    t2.join()
-    t3.join()
+    game_over(shutdown_q.get() * 100)
+
+def game_over(score):
+    text = settings.get_game_text("configs_menu")
+    while True:
+        clear_screen()
+
+        tprint("Game over")
+        print(f"Final Score: {score:010d}\n")
+        print("1. Try Again")
+        print("2. Save Score")
+        print("3. Go to main menu")
+
+        user_input = input(f"{text["input_ask"]}")
+
+        match user_input:
+            case "1":
+                run_game()
+                break
+            case "2":
+                save_score()
+                break
+            case "3":
+                break
+
+def save_score():
+    pass
 
 main()
+
+

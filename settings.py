@@ -1,4 +1,5 @@
 import tomllib
+import yaml
 
 class Settings:
 
@@ -6,18 +7,18 @@ class Settings:
         self.__language, self.__difficulty, self.__grid_size = self.__load_user_settings()
 
         self.__DIFFICULTIES = {
-            "ign" : 3,
-            "easy" : 2,
-            "normal" : 1,
-            "hard" : 0.5,
-            "hell" : 0.2,
+            "ign":    3,
+            "easy":   2,
+            "normal": 1,
+            "hard":   0.5,
+            "hell":   0.25,
         }
         self.__GRID_SIZES = {
-            "tiny" : 8,
-            "small" : 16,
-            "medium" : 32,
-            "big" : 64,
-            "huge" : 128,
+            "tiny":   8,
+            "small":  16,
+            "medium": 32,
+            "big":    64,
+            "huge":   128,
         }
 
         self.__LANGUAGES = {"en", "br"}
@@ -35,9 +36,19 @@ class Settings:
             return tomllib.load(file)
 
     def __load_user_settings(self) -> tuple[str, str, str]:
-        with open(f"./data/settings.toml", "rb") as file:
-            data = tomllib.load(file)
+        with open("./data/settings.yaml", "r") as file:
+            data = yaml.safe_load(file)
             return data["language"], data["difficulty"], data["grid_size"]
+
+    def __save_user_settings(self):
+        settings_data = {
+            "language": self.__language,
+            "difficulty": self.__difficulty,
+            "grid_size": self.__grid_size,
+        }
+
+        with open("./data/settings.yaml", "w") as file:
+            yaml.safe_dump(settings_data, file)
 
 
     # Getters
@@ -75,6 +86,8 @@ class Settings:
         self.__language = language
         self.__update_game_text()
 
+        self.__save_user_settings()
+
     def set_game_grid(self, grid_size: str):
         if(grid_size not in set(self.__GRID_SIZES.keys())):
             raise Exception(f"The grid size {grid_size} is not supported")
@@ -82,12 +95,16 @@ class Settings:
         self.__grid_size = grid_size
         self.__update_game_grid()
 
+        self.__save_user_settings()
+
     def set_game_difficulty(self, difficulty: str):
         if(difficulty not in set(self.__DIFFICULTIES.keys())):
             raise Exception(f"The difficulty {difficulty} is not supported")
 
         self.__difficulty = difficulty
         self.__update_game_difficulty()
+
+        self.__save_user_settings()
 
 
     # Updaters

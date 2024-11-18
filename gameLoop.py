@@ -1,4 +1,7 @@
+from art import tprint
+from helpers import clear_screen
 from settings import settings
+from copy import deepcopy
 from queue import Queue
 from collections import deque
 from random import randint
@@ -8,11 +11,14 @@ from gameTypes import SnakeCoordinates, GameGrid, TailClash, OutOfBonds
 
 class GameLoop:
 
-    def __init__(self, render_queue: Queue, controls_queue: Queue):
+    def __init__(self, render_queue: Queue, controls_queue: Queue, shutdown_queue: Queue):
         self.__render_queue = render_queue
         self.__controls_queue = controls_queue
+        self.__shutdown_queue = shutdown_queue
 
-        self.__current_grid: GameGrid = settings.get_game_grid()
+        self.__current_difficulty: int = settings.get_game_difficulty()
+        self.__current_score: int = 0
+        self.__current_grid: GameGrid = deepcopy(settings.get_game_grid())
 
         self.__grid_size_y: int = len(self.__current_grid)
         self.__grid_size_x: int = len(self.__current_grid[0])
@@ -31,13 +37,16 @@ class GameLoop:
 
     def __start(self):
         self.__update_snake_head("v")
-        self.__render_queue.put(self.__current_grid)
+        self.__render_queue.put({
+            "score": self.__current_score,
+            "grid": self.__current_grid,
+        })
 
         current_input: str = self.__controls_queue.get()
         self.__generate_fruit()
 
         while True:
-            sleep(0.1 * settings.get_game_difficulty())
+            sleep(0.1 * (self.__current_difficulty - self.__current_score // 50))
 
             if not self.__controls_queue.empty():
                 current_input = self.__controls_queue.get()
@@ -55,29 +64,42 @@ class GameLoop:
                         self.__update_snake_position("x", -1, "<")
                     case "r":
                         self.__update_snake_position("x",  1, ">")
-                    case "q":
-                        self.__stop_game()
+                    case -1:
+                        self.__stop_game("You lost by Giving up :(")
+                        return
 
             except TailClash:
                 self.__update_snake_head("X")
-                self.__render_queue.put(self.__current_grid)
+                self.__render_queue.put({
+                    "score": self.__current_score,
+                    "grid": self.__current_grid,
+                })
 
-                self.__stop_game()
-                break
+                self.__stop_game("You lost by eating our own tail :(")
+                return
             except OutOfBonds:
                 self.__snake_head_coordinates = self.__snake_coordinates_queue.pop()
                 self.__update_snake_head("X")
-                self.__render_queue.put(self.__current_grid)
+                self.__render_queue.put({
+                    "score": self.__current_score,
+                    "grid": self.__current_grid,
+                })
 
-                self.__stop_game()
-                break
+                self.__stop_game("You lost by hitting the wall :(")
+                return
             except:
-                break
+                self.__stop_game("You lost by a random bug lol")
+                return
 
+    def __stop_game(self, message: str):
+        sleep(0.25)
+        self.__shutdown_queue.put(self.__current_score)
+        sleep(0.25)
 
-    def __stop_game(self):
-        self.__render_queue.shutdown()
-        self.__controls_queue.shutdown()
+        clear_screen()
+        tprint("Game over")
+        print(f"\n{message}")
+        print("\nPress any button to continue")
 
     def __update_snake_position(self, axis: Literal["x", "y"], move_step: int, head_character: str):
         self.__update_snake_head("o")
@@ -86,7 +108,7 @@ class GameLoop:
         self.__snake_head_coordinates[axis] += move_step
 
         if self.__tile_is_out_of_bounds(axis):
-            raise OutOfBonds()
+            raise OutOfBonds("")
 
         head = self.__snake_head_coordinates
 
@@ -95,11 +117,16 @@ class GameLoop:
 
         if self.__tile_have_fruit(head["x"], head["y"]):
             self.__snake_size += 1
+            self.__current_score += 1
             self.__generate_fruit()
 
         self.__update_snake_head(head_character)
 
-        self.__render_queue.put(self.__current_grid)
+        self.__render_queue.put(
+            {
+                "score": self.__current_score,
+                "grid": self.__current_grid,
+            })
 
     def __tile_is_out_of_bounds(self, axis: Literal["x", "y"]) -> bool:
         if axis == "x":
