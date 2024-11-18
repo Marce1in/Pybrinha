@@ -33,6 +33,8 @@ class GameLoop:
 
         self.__snake_size = 2
 
+        self.__game_text = settings.get_game_text("game_loop")
+
         self.__start()
 
     def __start(self):
@@ -65,7 +67,7 @@ class GameLoop:
                     case "r":
                         self.__update_snake_position("x",  1, ">")
                     case -1:
-                        self.__stop_game("You lost by Giving up :(")
+                        self.__stop_game(self.__game_text["giving_up"])
                         return
 
             except TailClash:
@@ -75,7 +77,7 @@ class GameLoop:
                     "grid": self.__current_grid,
                 })
 
-                self.__stop_game("You lost by eating our own tail :(")
+                self.__stop_game(self.__game_text["eating_tail"])
                 return
             except OutOfBonds:
                 self.__snake_head_coordinates = self.__snake_coordinates_queue.pop()
@@ -85,10 +87,10 @@ class GameLoop:
                     "grid": self.__current_grid,
                 })
 
-                self.__stop_game("You lost by hitting the wall :(")
+                self.__stop_game(self.__game_text["hitting_wall"])
                 return
             except:
-                self.__stop_game("You lost by a random bug lol")
+                self.__stop_game(self.__game_text["random_bug"])
                 return
 
     def __stop_game(self, message: str):
@@ -97,9 +99,9 @@ class GameLoop:
         sleep(0.25)
 
         clear_screen()
-        tprint("Game over")
+        tprint(self.__game_text["game_over_greet"])
         print(f"\n{message}")
-        print("\nPress any button to continue")
+        print(f"\n{self.__game_text["wait_msg"]}")
 
     def __update_snake_position(self, axis: Literal["x", "y"], move_step: int, head_character: str):
         self.__update_snake_head("o")

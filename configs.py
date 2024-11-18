@@ -1,3 +1,4 @@
+from csv import DictReader, DictWriter
 from settings import settings
 from helpers import clear_screen
 from art import tprint
@@ -123,15 +124,29 @@ def clear_leaderboard():
         user_input = input(text_configs["input_ask"])
 
         if user_input == "1":
+            delete_leaderboard()
             stop_and_wait(text_configs["leader_msg"])
             break
         elif user_input == "2":
             break
 
+def delete_leaderboard():
+    with open("./data/leaderboard.csv", 'r') as file:
+        data = DictReader(file)
+        headers = data.fieldnames
+
+        if headers is None:
+            raise Exception("There's something wrong in the leaderboard files!")
+
+        with open("./data/leaderboard.csv", 'w', newline='') as file:
+            writer = DictWriter(file, fieldnames=headers)
+            writer.writeheader()
+
 def stop_and_wait(message):
     text_configs = settings.get_game_text("configs_menu")
 
     clear_screen()
+    tprint(text_configs["greet"])
     print(message + "\n")
     print(text_configs["wait_msg"])
 

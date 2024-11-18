@@ -1,6 +1,7 @@
 from threading import Thread
 from queue import Queue
 from art import tprint
+from csv import DictReader, DictWriter
 
 from gameLoop import GameLoop
 from input import listen_input
@@ -41,7 +42,25 @@ def main():
 
 
 def leaderboard():
-    pass
+    text = settings.get_game_text("leaderboard")
+
+    clear_screen()
+    tprint(text["greet"])
+
+    with open("./data/leaderboard.csv") as file:
+        data = list(DictReader(file))
+
+        if data == []:
+            print(f"{text["no_score"]}\n")
+            input(text["press_continue"])
+            return
+
+
+        leaderboard = sorted(data, key=lambda row: int(row["score"]), reverse=True)
+        for i, row in enumerate(leaderboard, start=1):
+            print(f"{i:>2}.  {row["name"]:<6} {int(row['score']):010d}")
+
+        input(f"\n{text["press_continue"]}")
 
 def config():
     text = settings.get_game_text("configs_menu")
@@ -86,15 +105,16 @@ def run_game():
     game_over(shutdown_q.get() * 100)
 
 def game_over(score):
-    text = settings.get_game_text("configs_menu")
+    text = settings.get_game_text("game_over")
+
     while True:
         clear_screen()
 
-        tprint("Game over")
-        print(f"Final Score: {score:010d}\n")
-        print("1. Try Again")
-        print("2. Save Score")
-        print("3. Go to main menu")
+        tprint(text["greet"])
+        print(f"{text["score"]}: {score:010d}\n")
+        print(f"1. {text["try_again_opt"]}")
+        print(f"2. {text["save_score_opt"]}")
+        print(f"3. {text["go_menu_opt"]}")
 
         user_input = input(f"{text["input_ask"]}")
 
@@ -103,13 +123,34 @@ def game_over(score):
                 run_game()
                 break
             case "2":
-                save_score()
+                save_score(score)
                 break
             case "3":
                 break
 
-def save_score():
-    pass
+def save_score(score: int):
+    text = settings.get_game_text("game_over")
+
+    clear_screen()
+    tprint(text["greet"])
+    initials = input(text["ask_initials"]).strip().upper()
+
+    while len(initials) != 3 or not initials.isalpha():
+        clear_screen()
+        tprint(text["greet"])
+
+        print(f"{text["invalid_initials"]}\n")
+        initials = input(text["ask_initials"]).strip().upper()
+
+    with open("./data/leaderboard.csv", 'a', newline='') as file:
+        writer = DictWriter(file, fieldnames=["name", "score"])
+        writer.writerow({"name": initials, "score": score})
+
+    clear_screen()
+    tprint(text["greet"])
+
+    print(f"{text["score_sucess"]}\n")
+    input(text["wait_msg"])
 
 main()
 

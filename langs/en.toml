@@ -10,6 +10,39 @@ input_ask = "\nChoose an option: "
 
 goodbye = 'Goodbye     :('
 
+[leaderboard]
+greet = "Leaderboard"
+
+no_score = "You don't have any scores registred :(, try to play some games"
+press_continue = "Press Enter to Continue"
+
+[game_over]
+greet = "Game Over"
+score = "Final Score"
+try_again_opt = "Try Again"
+save_score_opt = "Save Score"
+go_menu_opt = "Go to Main Menu"
+
+input_ask = "\nChoose an option: "
+
+ask_initials = "Enter your initials (3 characters): "
+invalid_initials = "Invalid input. Please enter exactly 3 alphabetic characters."
+score_sucess = "Your score has been saved successfully!"
+
+wait_msg = "Press Enter to continue"
+
+[game_loop]
+giving_up = "You lost by Giving Up :("
+eating_tail = "You lost by eating our own tail :("
+hitting_wall = "You lost by hitting the wall :("
+random_bug = "You lost by a random bug lol"
+
+game_over_greet = "Game Over"
+
+wait_msg = "Press Enter to continue"
+score = "Score"
+give_up = "Press 'q' any time to give up"
+
 [configs_menu]
 greet = "Configs"
 

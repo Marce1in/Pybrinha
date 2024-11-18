@@ -1,4 +1,4 @@
-language = "en"
+language = "English"
 
 [main_menu]
 start_opt = '1. Iniciar Jogo'
@@ -8,27 +8,66 @@ leave_opt = '4. Sair'
 
 input_ask = "\nEscolha uma opção: "
 
-goodbye = 'Adeus     :('
+goodbye = 'Até logo     :('
+
+[leaderboard]
+greet = "Placar"
+
+no_score = "Você não tem nenhuma pontuação registrada :(, tente jogar algumas partidas"
+press_continue = "Pressione Enter para Continuar"
+
+[game_over]
+greet = "Fim de Jogo"
+score = "Pontuação Final"
+try_again_opt = "Tentar Novamente"
+save_score_opt = "Salvar Pontuação"
+go_menu_opt = "Voltar ao Menu Principal"
+
+input_ask = "\nEscolha uma opção: "
+
+ask_initials = "Digite suas iniciais (3 caracteres): "
+invalid_initials = "Entrada inválida. Por favor, digite exatamente 3 caracteres alfabéticos."
+score_sucess = "Sua pontuação foi salva com sucesso!"
+
+wait_msg = "Pressione Enter para continuar"
+
+[game_loop]
+giving_up = "Você perdeu por Desistir :("
+eating_tail = "Você perdeu por comer seu próprio rabo :("
+hitting_wall = "Você perdeu por bater na parede :("
+random_bug = "Você perdeu por um bug aleatório kkkk"
+
+game_over_greet = "Fim de Jogo"
+
+wait_msg = "Pressione Enter para continuar"
+score = "Pontuação"
+give_up = "Pressione 'q' a qualquer momento para desistir"
 
 [configs_menu]
 greet = "Configurações"
 
-difficulty_opt = "1. Alterar dificuldade"
-grid_opt = "2. Alterar tamanho do grid"
-lang_opt = "3. Alterar idioma"
+difficulty_opt = "1. Mudar dificuldade"
+grid_opt = "2. Mudar tamanho do grid"
+lang_opt = "3. Mudar idioma"
 leader_opt = "4. Limpar placar"
-leave_opt = "5. Sair"
+leave_opt = "5. Voltar"
 
 goback_opt = "Voltar"
-
-greet_difficulty = "Dificuldades"
-greet_grid = "Tamanhos de Grid"
-greet_language = "Idiomas"
-
 input_ask = "\nEscolha uma opção: "
 
+greet_difficulty = "Dificuldades"
+greet_grid = "Grids"
+greet_language = "Idiomas"
+
+leader_conf = "Isso irá deletar TODO o placar, tem certeza?"
+leader_yes = "1. Sim"
+leader_no = "2. Não"
+leader_msg = "Todo o placar foi deletado!"
+
+wait_msg = "Pressione Enter para continuar"
+
 [difficulty]
-ign = "IGN"
+ign = "NOOB"
 easy = "Fácil"
 normal = "Normal"
 hard = "Difícil"
@@ -39,7 +78,7 @@ tiny = "MINÚSCULO"
 small = "Pequeno"
 medium = "Médio"
 big = "Grande"
-huge = "ENORME"
+huge = "GIGANTE"
 
 [languages]
 en = "Inglês"
